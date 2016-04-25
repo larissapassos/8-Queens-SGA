@@ -6,10 +6,9 @@ bit_board_size = bit_num_size * num_queens
 
 base_board = range(num_queens)
 
-
 def encode_number(number):
-	bit_number = bin(number)[2 :].zfill(bit_num_size)
-	return bit_number
+    bit_number = bin(number)[2 :].zfill(bit_num_size)
+    return bit_number
 
 def decode_number(bit_number):
     number = int(bit_number, 2)
