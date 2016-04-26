@@ -35,34 +35,8 @@ def decode(bit_population, population):
         population.append(decode_board(bit_board))
 
 def generate_population(pop_size, population):
+    pop = []
     for i in xrange(pop_size):
         random.shuffle(base_board)
-        population.append(list(base_board))
-
-#Testing
-# population = []
-# generate_population(5, population)
-
-# print "#### Population Generated ####"
-# for board in population:
-#   print board
-
-# print"\n\n\n"
-
-# bit_population = []
-# encode(population, bit_population)
-
-# print "#### Bit Population Generated ####"
-# for bit_board in bit_population:
-#   print bit_board
-
-# print"\n\n\n"
-
-# orig_population = []
-# decode(bit_population, orig_population)
-
-# print "#### Decoded Population Generated ####"
-# for orig_board in orig_population:
-#   print orig_board
-
-# print"\n\n\n"
+        pop.append(list(base_board))
+    encode(pop, population)
