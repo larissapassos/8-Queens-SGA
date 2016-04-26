@@ -40,3 +40,26 @@ def generate_population(pop_size, population):
         random.shuffle(base_board)
         pop.append(list(base_board))
     encode(pop, population)
+
+def diagonal(board, i, j):
+    if abs(j - i) == abs(board[j] - board[i]):
+        return True
+    return False
+
+def insert_in_order(lst_pairs, board, fitness):
+    # Binary search and insertion to keep the pairs ordered so we can trim them easily
+    lo = 0
+    hi = len(lst_pairs)
+    while lo < hi:
+        mid = (lo + hi) / 2
+        if lst_pairs[mid][1] > fitness:
+            lo = mid + 1
+        else:
+            hi = mid
+    lst_pairs.insert(lo, (board, fitness))
+
+def avg(lst_pairs):
+    sum = 0
+    for gene, fitness in lst_pairs:
+        sum += fitness
+    return sum / float(len(lst_pairs))
