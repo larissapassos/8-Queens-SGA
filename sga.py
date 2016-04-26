@@ -59,7 +59,7 @@ def sga(population_size, parent_selection):
     child_1 = None
     child_2 = None
 
-    while max_fitness < 1 or steps < 10000:
+    while max_fitness < 1 and steps < 10000:
         # Add childs in population and calculate their fitness
         max_ind, max_fitness = calculate_fitness(population, child_1, child_2)
 
