@@ -2,6 +2,10 @@
 
 Bioinspired Computation course project
 
-Group: 
-  - Guilherme Palma Peixoto
-  - Larissa Navarro Passos de Araujo
+### Group:
+* Guilherme Palma Peixoto
+* Larissa Navarro Passos de Araujo
+
+### Python dependencies:
+* matplotlib
+* pandas
