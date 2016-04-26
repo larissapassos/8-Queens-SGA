@@ -31,8 +31,8 @@ def calculate_fitness(population, child_1, child_2):
     else:
         fitness_1 = fitness_board(child_1)
         fitness_2 = fitness_board(child_2)
-        insert_in_order(pop_fit_pairs, child_1, fitness_1)
-        insert_in_order(pop_fit_pairs, child_2, fitness_2)
+        utils.insert_in_order(pop_fit_pairs, child_1, fitness_1)
+        utils.insert_in_order(pop_fit_pairs, child_2, fitness_2)
     return pop_fit_pairs[0]
 
 def trim_population():
@@ -71,7 +71,7 @@ def sga(population_size, parent_selection):
         max_fitness_lst.append(max_fitness)
         avg_fitness_lst.append(avg_fitness)
 
-        if (max_fitness == 1):
+        if (max_fitness == 1.0):
             #solution
             break
 
