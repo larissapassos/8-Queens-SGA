@@ -4,10 +4,9 @@ import utils
 from operator import itemgetter
 
 class SGA:
-    def __init__(self):
-        self.crossover_prob = 1.0
-        self.mutation_prob = 0.8
-        self.iteration_limit = 10000
+    def __init__(self, crossover_prob=1.0, mutation_prob=.8):
+        self.crossover_prob = crossover_prob
+        self.mutation_prob = mutation_prob
         self.pop_fit_pairs = []
 
     def fitness_board(self, board):
@@ -83,7 +82,7 @@ class SGA:
         return board
 
     def sga(self, population_size, parent_selection=None,
-            n_steps=10000, verbose=0):
+            n_steps=1000, verbose=0):
         if parent_selection is None:
             parent_selection = self.tournament
         population = []
