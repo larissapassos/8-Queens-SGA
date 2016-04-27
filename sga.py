@@ -39,7 +39,7 @@ def trim_population():
     pop_fit_pairs.pop()
 
 def tournament():
-    candidates = random.sample(pop_fit_pairs, 3)
+    candidates = random.sample(pop_fit_pairs, 5)
     sorted_candidates = sorted(candidates, key=itemgetter(1), reverse=True)
     return sorted_candidates[0][0], sorted_candidates[1][0]
 
@@ -56,16 +56,20 @@ def crossover(parent_1, parent_2):
     crossover_point = random.randint(1, utils.num_queens - 1)
     print "crossover_point: ", crossover_point
     crossover_bit = crossover_point * utils.bit_num_size
+
     child_1 = parent_1[: crossover_bit]
     child_2 = parent_2[: crossover_bit]
+
     for i in range(crossover_bit, utils.bit_board_size + crossover_bit, utils.bit_num_size):
         index = i % utils.bit_board_size
         next_bit_1 = parent_1[index : index + utils.bit_num_size]
         next_bit_2 = parent_2[index : index + utils.bit_num_size]
+
         if not has_column(child_2, next_bit_1):
             child_2 += next_bit_1
         if not has_column(child_1, next_bit_2):
             child_1 += next_bit_2
+
     return child_1, child_2
 
 def mutation(board):
@@ -83,7 +87,7 @@ def sga(population_size, parent_selection):
     child_1 = None
     child_2 = None
 
-    while max_fitness < 1 and steps < 5:
+    while max_fitness < 1 and steps < 10000:
         # Add childs in population and calculate their fitness
         max_ind, max_fitness = calculate_fitness(population, child_1, child_2)
 
