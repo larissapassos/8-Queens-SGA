@@ -7,6 +7,7 @@ matplotlib.style.use('ggplot')
 def plot_fitness_by_generation(fitnessArray):
     df = pd.DataFrame(fitnessArray, columns=["fitness"])
     df.fitness.plot()
+    plt.ylim(df.fitness.min()*.9, df.fitness.max()*1.1)
     plt.ylabel('Fitness')
     plt.xlabel('Generation')
     plt.title('Fitness increase over generation')
