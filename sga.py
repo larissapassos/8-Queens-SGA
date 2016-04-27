@@ -1,25 +1,24 @@
 import random
 import utils
+from operator import itemgetter
 
 crossover_prob = 1.0
 mutation_prob = 0.8
 iteration_limit = 10000
-num_queens = 8
 
 pop_fit_pairs = []
 
 def fitness_board(board):
     conflicts = 0
     orig_board = utils.decode_board(board)
-    for i in range(num_queens):
-        for j in range(i + 1, num_queens):
+    for i in range(utils.num_queens):
+        for j in range(i + 1, utils.num_queens):
             if utils.diagonal(orig_board, i, j):
                 # same diagonal
                 conflicts += 1
             elif orig_board[i] == orig_board[j]:
                 # same column
                 conflicts += 1
-    print "Number of conflicts ", conflicts
     fitness = float(1) / (1 + conflicts)
     return fitness
 
@@ -39,13 +38,38 @@ def trim_population():
     pop_fit_pairs.pop()
     pop_fit_pairs.pop()
 
-# def tournament():
+def tournament():
+    candidates = random.sample(pop_fit_pairs, 3)
+    sorted_candidates = sorted(candidates, key=itemgetter(1), reverse=True)
+    return sorted_candidates[0][0], sorted_candidates[1][0]
 
 # def roulette():
 
-# def crossover(parent_1, parent_2):
+def has_column(partial_board, column):
+    for i in range(0, len(partial_board), utils.bit_num_size):
+        board_column = partial_board[i : i + utils.bit_num_size]
+        if board_column == column:
+            return True
+    return False
 
-# def mutation(board):
+def crossover(parent_1, parent_2):
+    crossover_point = random.randint(1, utils.num_queens - 1)
+    print "crossover_point: ", crossover_point
+    crossover_bit = crossover_point * utils.bit_num_size
+    child_1 = parent_1[: crossover_bit]
+    child_2 = parent_2[: crossover_bit]
+    for i in range(crossover_bit, utils.bit_board_size + crossover_bit, utils.bit_num_size):
+        index = i % utils.bit_board_size
+        next_bit_1 = parent_1[index : index + utils.bit_num_size]
+        next_bit_2 = parent_2[index : index + utils.bit_num_size]
+        if not has_column(child_2, next_bit_1):
+            child_2 += next_bit_1
+        if not has_column(child_1, next_bit_2):
+            child_1 += next_bit_2
+    return child_1, child_2
+
+def mutation(board):
+    return board
 
 def sga(population_size, parent_selection):
     population = []
@@ -59,12 +83,15 @@ def sga(population_size, parent_selection):
     child_1 = None
     child_2 = None
 
-    while max_fitness < 1 and steps < 10000:
+    while max_fitness < 1 and steps < 5:
         # Add childs in population and calculate their fitness
         max_ind, max_fitness = calculate_fitness(population, child_1, child_2)
 
+        print "pop: ", pop_fit_pairs
+
         if (child_1 is not None and child_2 is not None):
             # Remove the 2 worst individuals from population
+            print "Trimming population"
             trim_population()
 
         avg_fitness = utils.avg(pop_fit_pairs)
@@ -73,11 +100,14 @@ def sga(population_size, parent_selection):
 
         if (max_fitness == 1.0):
             #solution
+            print "Solution found"
             break
 
         # Crossover and mutation
         parent_1, parent_2 = parent_selection()
+        print "parents: ", parent_1, parent_2
         child_1, child_2 = crossover(parent_1, parent_2)
+        print "childs: ", child_1, child_2
         mutation(child_1)
         mutation(child_2)
 
@@ -85,6 +115,7 @@ def sga(population_size, parent_selection):
 
     # Populate solution
     solution = {"max_fitness": max_fitness, "avg_fitness": avg_fitness,
-        "individual": utils.decode(max_ind), "avg_fitness_lst": avg_fitness_lst,
+        "individual": utils.decode_board(max_ind), "avg_fitness_lst": avg_fitness_lst,
         "max_fitness_lst": max_fitness_lst, "steps": steps}
+    print "solution: ", solution
     return solution
