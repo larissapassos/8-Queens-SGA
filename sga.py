@@ -44,7 +44,7 @@ class SGA:
         sorted_candidates = sorted(candidates, key=itemgetter(1), reverse=True)
         return sorted_candidates[0][0], sorted_candidates[1][0]
 
-    # def roulette():
+    # def roulette(self):
 
     def has_column(self, partial_board, column):
         for i in range(0, len(partial_board), utils.bit_num_size):
@@ -74,15 +74,23 @@ class SGA:
 
         return child_1, child_2
 
-    def mutation(self, board):
+    def apply_mutation(self, board, indexes):
+        i = indexes[0] * utils.bit_num_size if indexes[0] < indexes[1] else indexes[1] * utils.bit_num_size
+        j = indexes[1] * utils.bit_num_size if indexes[0] < indexes[1] else indexes[0] * utils.bit_num_size
+        return ''.join((board[: i], board[j : j + 3], board[i + 3 : j],
+            board[i : i + 3], board[j + 3 :]))
+
+    def mutation(self, board, verbose=0):
         chance = roll()
-        if chance >= self.mutation_prob:
-            return board
-            # applyMutation()
+        if chance <= self.mutation_prob:
+            swap = random.sample(xrange(8), 2)
+            if verbose == 2:
+                print "genes to be swapped: ", swap
+            return self.apply_mutation(board, swap)
         return board
 
     def sga(self, population_size, parent_selection=None,
-            n_steps=1000, verbose=0):
+            n_steps=10000, verbose=0):
         if parent_selection is None:
             parent_selection = self.tournament
         population = []
@@ -127,9 +135,10 @@ class SGA:
             child_1, child_2 = self.crossover(parent_1, parent_2, verbose)
             if verbose == 2:
                 print "childs: ", child_1, child_2
-            self.mutation(child_1)
-            self.mutation(child_2)
-
+            child_1 = self.mutation(child_1)
+            child_2 = self.mutation(child_2)
+            if verbose == 2:
+                print "mutated boards: ", child_1, child_2
             steps += 1
             if verbose == 1:
                 print "steps: {0}".format(steps)
