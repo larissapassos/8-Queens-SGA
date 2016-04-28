@@ -30,13 +30,13 @@ def plot_metrics(metrics, metricsNames,generalMetricName,
         plt.savefig(figdir)
 
 def main():
-    n_pop = [10, 30, 50, 70]
+    n_pop = [10, 30, 50, 70, 100]
     general_metrics = ["max_fitness", "avg_fitness"]
 
     for general_metric_name in general_metrics:
         metrics = []
         metrics_names = []
         for population_size in n_pop:
-            metrics.append(sga.SGA().sga(population_size, n_steps=100)[general_metric_name + "_lst"])
+            metrics.append(sga.SGA().sga(population_size, n_steps=10000)[general_metric_name + "_lst"])
             metrics_names.append("{0}={1}".format(general_metric_name, population_size))
         plot_metrics(metrics, metrics_names, general_metric_name, "generation")

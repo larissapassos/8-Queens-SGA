@@ -44,7 +44,21 @@ class SGA:
         sorted_candidates = sorted(candidates, key=itemgetter(1), reverse=True)
         return sorted_candidates[0][0], sorted_candidates[1][0]
 
-    # def roulette(self):
+    def roulette(self):
+        total_fit = reduce (lambda x, y: x + y[1], self.pop_fit_pairs, 0)
+        rel_fit = [x[1] / total_fit for x in self.pop_fit_pairs]
+        prob_intervals = [sum(rel_fit[: i + 1]) for i in xrange(len(rel_fit))]
+        parents = []
+
+        for n in range(2):
+            r = roll()
+            print r
+            for (i, board_fit) in enumerate(self.pop_fit_pairs):
+                if r <= prob_intervals[i]:
+                    parents.append(board_fit)
+                    break
+
+        return parents[0][0], parents[1][0]
 
     def has_column(self, partial_board, column):
         for i in range(0, len(partial_board), utils.bit_num_size):
